@@ -166,6 +166,14 @@ EIGEN_AOCL_VML_UNARY_CALL_DOUBLE(cos, amd_vrda_cos)
 EIGEN_AOCL_VML_UNARY_CALL_DOUBLE(sqrt, amd_vrda_sqrt)
 EIGEN_AOCL_VML_UNARY_CALL_DOUBLE(log, amd_vrda_log)
 EIGEN_AOCL_VML_UNARY_CALL_DOUBLE(log10, amd_vrda_log10)
+EIGEN_AOCL_VML_UNARY_CALL_DOUBLE(asin, amd_vrda_asin)
+EIGEN_AOCL_VML_UNARY_CALL_DOUBLE(sinh, amd_vrda_sinh)
+EIGEN_AOCL_VML_UNARY_CALL_DOUBLE(acos, amd_vrda_acos)
+EIGEN_AOCL_VML_UNARY_CALL_DOUBLE(cosh, amd_vrda_cosh)
+EIGEN_AOCL_VML_UNARY_CALL_DOUBLE(tan, amd_vrda_tan)
+EIGEN_AOCL_VML_UNARY_CALL_DOUBLE(atan, amd_vrda_atan)
+EIGEN_AOCL_VML_UNARY_CALL_DOUBLE(tanh, amd_vrda_tanh)
+EIGEN_AOCL_VML_UNARY_CALL_DOUBLE(log2, amd_vrda_log2)
  
  // Binary operation dispatch for float (scalar fallback).
  #define EIGEN_AOCL_VML_BINARY_CALL_FLOAT(EIGENOP, STDFUNC)                      \
