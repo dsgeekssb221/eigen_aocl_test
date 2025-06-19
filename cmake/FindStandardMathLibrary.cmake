@@ -14,21 +14,31 @@
 
 
 include(CheckCXXSourceCompiles)
-
-# a little test program for c++ math functions.
-# notice the std:: is required on some platforms such as QNX
-
 set(find_standard_math_library_test_program
-"#include<cmath>
-int main() { std::sin(0.0); std::log(0.0f); }")
+"#include <cmath>
+int main() { std::sin(0.0); std::log(0.0f); return 0; }")
 
-# first try compiling/linking the test program without any linker flags
+# --- Begin AOCL MathLib Section ---
+if(DEFINED EIGEN_USE_AOCL_ALL AND EIGEN_USE_AOCL_ALL)
+  set(STANDARD_MATH_LIBRARY "amdlibm;m")
+  set(STANDARD_MATH_LIBRARY_FOUND TRUE)
+  message(STATUS "AOCL MathLib enabled; linking with -lamdlibm -lm.")
+  message(STATUS "For fast math mode, preload via LD_PRELOAD=/path/to/libalmfast.so")
+endif()
+# --- End AOCL MathLib Section ---
 
-set(CMAKE_REQUIRED_FLAGS "")
-set(CMAKE_REQUIRED_LIBRARIES "")
-CHECK_CXX_SOURCE_COMPILES(
-  "${find_standard_math_library_test_program}"
-  standard_math_library_linked_to_automatically
+if(NOT STANDARD_MATH_LIBRARY_FOUND)
+  # We have to check whether the standard math library is linked automatically or not.
+  # This is the case on most platforms, but not on QNX for example.
+  # The test program below will try to use some functions from the standard math library,
+  # and if it compiles and links successfully, then we know that the standard math library
+  # is linked automatically.
+
+  set(CMAKE_REQUIRED_FLAGS "-std=c++11")
+  set(CMAKE_REQUIRED_LIBRARIES "")
+  CHECK_CXX_SOURCE_COMPILES(
+    "${find_standard_math_library_test_program}"
+    standard_math_library_linked_to_automatically
 )
 
 if(standard_math_library_linked_to_automatically)

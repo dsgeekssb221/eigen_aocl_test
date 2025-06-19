@@ -1,5 +1,5 @@
 project(Eigen3)
-
+include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindAOCL.cmake)  
 cmake_minimum_required(VERSION 2.8.5)
 
 # guard against in-source builds
