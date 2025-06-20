@@ -51,24 +51,7 @@
  #include <cassert>
  #include "AOCL_Support.h"
  
- #ifdef __cplusplus
- extern "C" {
- #endif
- 
- // Declarations for AOCL MathLib vectorized functions (double precision only).
- // Input pointers are const since they are not modified.
- void vrda_exp(int length, const double *input, double *result);
- void vrda_sin(int length, const double *input, double *result);
- void vrda_cos(int length, const double *input, double *result);
- void vrda_sqrt(int length, const double *input, double *result);
- void vrda_log(int length, const double *input, double *result);
- void vrda_log10(int length, const double *input, double *result);
- void vrda_add(int len, const double *lhs, const double *rhs, double *dst);
- void vrda_pow(int length, const double *input1, const double *input2, double *result);
- 
- #ifdef __cplusplus
- }
- #endif
+#include "amdlibm_vec.h"
  
  // Define the SIMD width for AOCL MathLib (for AVX-512, typically 8 doubles).
  #ifndef AOCL_SIMD_WIDTH
@@ -157,7 +140,7 @@
              int simdBlocks = n / AOCL_SIMD_WIDTH;                               \
              int remainder = n % AOCL_SIMD_WIDTH;                                \
              if (simdBlocks > 0) {                                               \
-                 AOCLOP(simdBlocks * AOCL_SIMD_WIDTH, input, output);            \
+                 AOCLOP(simdBlocks * AOCL_SIMD_WIDTH, const_cast<double*>(input), output);            \
              }                                                                   \
              if (remainder > 0) {                                                \
                  int offset = simdBlocks * AOCL_SIMD_WIDTH;                      \
@@ -177,12 +160,20 @@
  //EIGEN_AOCL_VML_UNARY_CALL_FLOAT(log10)
  
  // Instantiate unary calls for double (AOCL vectorized).
- EIGEN_AOCL_VML_UNARY_CALL_DOUBLE(exp, vrda_exp)
- EIGEN_AOCL_VML_UNARY_CALL_DOUBLE(sin, vrda_sin)
- EIGEN_AOCL_VML_UNARY_CALL_DOUBLE(cos, vrda_cos)
- EIGEN_AOCL_VML_UNARY_CALL_DOUBLE(sqrt, vrda_sqrt)
- EIGEN_AOCL_VML_UNARY_CALL_DOUBLE(log, vrda_log)
- EIGEN_AOCL_VML_UNARY_CALL_DOUBLE(log10, vrda_log10)
+EIGEN_AOCL_VML_UNARY_CALL_DOUBLE(exp, amd_vrda_exp)
+EIGEN_AOCL_VML_UNARY_CALL_DOUBLE(sin, amd_vrda_sin)
+EIGEN_AOCL_VML_UNARY_CALL_DOUBLE(cos, amd_vrda_cos)
+EIGEN_AOCL_VML_UNARY_CALL_DOUBLE(sqrt, amd_vrda_sqrt)
+EIGEN_AOCL_VML_UNARY_CALL_DOUBLE(log, amd_vrda_log)
+EIGEN_AOCL_VML_UNARY_CALL_DOUBLE(log10, amd_vrda_log10)
+EIGEN_AOCL_VML_UNARY_CALL_DOUBLE(asin, amd_vrda_asin)
+EIGEN_AOCL_VML_UNARY_CALL_DOUBLE(sinh, amd_vrda_sinh)
+EIGEN_AOCL_VML_UNARY_CALL_DOUBLE(acos, amd_vrda_acos)
+EIGEN_AOCL_VML_UNARY_CALL_DOUBLE(cosh, amd_vrda_cosh)
+EIGEN_AOCL_VML_UNARY_CALL_DOUBLE(tan, amd_vrda_tan)
+EIGEN_AOCL_VML_UNARY_CALL_DOUBLE(atan, amd_vrda_atan)
+EIGEN_AOCL_VML_UNARY_CALL_DOUBLE(tanh, amd_vrda_tanh)
+EIGEN_AOCL_VML_UNARY_CALL_DOUBLE(log2, amd_vrda_log2)
  
  // Binary operation dispatch for float (scalar fallback).
  #define EIGEN_AOCL_VML_BINARY_CALL_FLOAT(EIGENOP, STDFUNC)                      \
@@ -224,7 +215,7 @@
              const double* lhs = reinterpret_cast<const double*>(src.lhs().data()); \
              const double* rhs = reinterpret_cast<const double*>(src.rhs().data()); \
              double* output = reinterpret_cast<double*>(dst.data());             \
-             AOCLOP(n, lhs, rhs, output);                                        \
+             AOCLOP(n, const_cast<double*>(lhs), const_cast<double*>(rhs), output);                                        \
          }                                                                       \
      };
  
@@ -233,10 +224,11 @@
  //EIGEN_AOCL_VML_BINARY_CALL_FLOAT(pow, std::pow)
  
  // Instantiate binary calls for double (AOCL vectorized).
- EIGEN_AOCL_VML_BINARY_CALL_DOUBLE(sum, vrda_add)  // Using scalar_sum_op for addition
- EIGEN_AOCL_VML_BINARY_CALL_DOUBLE(pow, vrda_pow)
+EIGEN_AOCL_VML_BINARY_CALL_DOUBLE(sum, amd_vrda_add)  // Using scalar_sum_op for addition
+EIGEN_AOCL_VML_BINARY_CALL_DOUBLE(pow, amd_vrda_pow)
  
  } // namespace internal
  } // namespace Eigen
  
  #endif // EIGEN_ASSIGN_AOCL_H
+

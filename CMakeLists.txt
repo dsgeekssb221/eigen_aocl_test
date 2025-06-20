@@ -98,6 +98,7 @@ else()
 endif()
 
 option(EIGEN_BUILD_BTL "Build benchmark suite" OFF)
+option(EIGEN_BUILD_AOCL_BENCH "Build AOCL benchmark" OFF)
 
 # Disable pkgconfig only for native Windows builds
 if(NOT WIN32 OR NOT CMAKE_HOST_SYSTEM_NAME MATCHES Windows)
@@ -469,6 +470,10 @@ add_subdirectory(scripts EXCLUDE_FROM_ALL)
 if(EIGEN_BUILD_BTL)
   add_subdirectory(bench/btl EXCLUDE_FROM_ALL)
 endif(EIGEN_BUILD_BTL)
+
+if(EIGEN_BUILD_AOCL_BENCH)
+  add_subdirectory(bench EXCLUDE_FROM_ALL)
+endif()
 
 if(NOT WIN32)
   add_subdirectory(bench/spbench EXCLUDE_FROM_ALL)
