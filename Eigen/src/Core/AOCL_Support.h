@@ -57,8 +57,14 @@
    #define EIGEN_USE_BLAS     // Routes to libblis (e.g., bli_dgemm)
    #define EIGEN_USE_LAPACKE  // Routes to libflame (e.g., dsyev via LAPACKE)
  
-   // Include AOCL VML header
-   #include "amdlibm.h"
+  // Include AOCL VML header
+  #include "amdlibm.h"
+
+  // Enable experimental vector interfaces
+  #ifndef AMD_LIBM_VEC_EXPERIMENTAL
+    #define AMD_LIBM_VEC_EXPERIMENTAL
+  #endif
+  #include "amdlibm_vec.h"
  #endif
  
  // Handle strict LAPACKE usage
