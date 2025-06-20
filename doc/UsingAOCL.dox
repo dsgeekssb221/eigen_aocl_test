@@ -1,0 +1,99 @@
+/*
+Copyright (c) 2025, Advanced Micro Devices, Inc.
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+  * Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+  * Redistributions in binary form must reproduce the above copyright
+    notice, this list of conditions and the following disclaimer in
+    the documentation and/or other materials provided with the
+    distribution.
+  * Neither the name of AMD nor the names of its contributors may be
+    used to endorse or promote products derived from this software
+    without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+*******************************************************************************
+*   Content : Documentation on the use of AMD AOCL through Eigen
+*******************************************************************************/
+
+namespace Eigen {
+
+/** \page TopicUsingAOCL Using AMD AOCL from %Eigen
+
+AMD AOCL (AMD Optimized CPU Libraries) provides highly optimized
+vector math, BLAS and LAPACK routines. Since Eigen 3.4, users can
+optionally build and link against AOCL to accelerate many dense
+operations on x86_64 processors.
+
+This integration is independently developed for Eigen and does not
+incorporate any code from proprietary vendors.
+
+\section TopicUsingAOCL_Enabling Enabling AOCL support
+
+To enable AOCL optimisations you must:
+ - Define the macro \c EIGEN_USE_AOCL_ALL before including any Eigen headers.
+ - Ensure the AOCL headers and libraries are available through your build
+   system. Typically this is achieved by setting the \c AOCL_ROOT
+   environment variable to the AOCL installation directory.
+ - Link your application with \c -lamdlibm -lblis -lflame -lm.
+
+When \c EIGEN_USE_AOCL_ALL is defined, Eigen automatically defines the
+following macros:
+ - \c EIGEN_USE_AOCL_VML  (for vector math dispatch)
+ - \c EIGEN_USE_BLAS      (for BLAS level2/3 via libblis)
+ - \c EIGEN_USE_LAPACKE   (for LAPACK via libflame)
+
+\section TopicUsingAOCL_CMake Using AOCL with CMake
+
+Eigen ships a CMake module \c FindAOCL.cmake that locates AOCL when the
+\c AOCL_ROOT variable is set. Projects can use it as follows:
+\code
+find_package(AOCL)
+if(AOCL_FOUND)
+  include_directories(${AOCL_INCLUDE_DIRS})
+  target_link_libraries(my_target ${AOCL_LIBRARIES})
+endif()
+\endcode
+
+The top-level \c CMakeLists.txt also exposes the option
+\c EIGEN_BUILD_AOCL_BENCH to build a benchmark located in
+\c bench/benchmark_aocl.cpp which exercises vector math and matrix
+operations.
+
+\section TopicUsingAOCL_Dispatch Dispatch layer
+
+The header \c Eigen/src/Core/Assign_AOCL.h implements specialisations of
+\c Assignment that route element-wise operations such as
+\c array().exp(), \c array().sin(), or \c array().pow() to AOCL vector
+routines like \c amd_vrda_exp when the expression size exceeds
+\c EIGEN_AOCL_VML_THRESHOLD (128 by default). Operations on smaller
+vectors or unsupported scalar types fall back to Eigen's built-in
+implementation.
+
+\section TopicUsingAOCL_Notes Notes
+ - AOCL is optional. If the libraries are not found or the macro is not
+   defined, Eigen will use its standard code paths.
+ - For further acceleration of scalar math routines, AOCL ships
+   \c libalmfast which can be preloaded via
+   \code
+   LD_PRELOAD=/path/to/libalmfast.so my_app
+   \endcode
+*/
+
+}
+

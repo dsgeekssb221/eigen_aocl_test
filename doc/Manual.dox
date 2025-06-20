@@ -22,6 +22,7 @@ namespace Eigen {
   - \subpage TopicMultiThreading
   - \subpage TopicUsingBlasLapack
   - \subpage TopicUsingIntelMKL
+  - \subpage TopicUsingAOCL
   - \subpage TopicCUDA
   - \subpage TopicPitfalls
   - \subpage TopicTemplateKeyword
