@@ -12,4 +12,6 @@ endif()
 
 if(AOCL_LIBRARIES)
   target_link_libraries(benchmark_aocl ${AOCL_LIBRARIES})
+  # Ensure pthread flags are used when linking
+  target_link_options(benchmark_aocl PRIVATE -pthread)
 endif()
