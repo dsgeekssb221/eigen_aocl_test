@@ -1,0 +1,25 @@
+# Simplified Makefile to build the AOCL benchmark without CMake
+# Usage:
+#   make -f bench/Makefile.aocl
+
+EIGEN_INSTALL ?= build/install
+AOCL_ROOT ?= /opt/aocl
+
+CXX ?= clang++
+CXXFLAGS ?= -O3 -g -DEIGEN_USE_AOCL_ALL \
+	        -I$(EIGEN_INSTALL)/include -I$(AOCL_ROOT)/include -Wno-parentheses
+LDFLAGS ?= -L$(AOCL_ROOT)/lib -lamdlibm -lblis -lflame -lm -lpthread -lrt -pthread
+
+TARGET = build/eigen_aocl_example
+
+$(TARGET): bench/benchmark_aocl.cpp
+	mkdir -p build
+	$(CXX) $(CXXFLAGS) bench/benchmark_aocl.cpp \
+	$(LDFLAGS) -o $(TARGET)
+
+all: $(TARGET)
+
+clean:
+	rm -f $(TARGET)
+
+.PHONY: all clean
