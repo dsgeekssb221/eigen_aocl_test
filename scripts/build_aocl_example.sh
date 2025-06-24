@@ -22,7 +22,8 @@ cmake .. -DEIGEN_BUILD_AOCL_BENCH=ON \
   -DCMAKE_C_COMPILER=clang \
   -DCMAKE_CXX_COMPILER=clang++ \
   -DCMAKE_INSTALL_PREFIX="${PWD}/install" \
-  -DINCLUDE_INSTALL_DIR="${PWD}/install/include" "$@"
+  -DINCLUDE_INSTALL_DIR="${PWD}/install/include" \
+  -DEIGEN_USE_AOCL_ALL=ON "$@"
 
 make -j$(nproc) benchmark_aocl
 
