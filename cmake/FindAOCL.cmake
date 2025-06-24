@@ -138,7 +138,8 @@ if(AOCL_LAPACK_LIB)
   list(APPEND AOCL_LIBRARIES ${AOCL_LAPACK_LIB})
 endif()
 if(AOCL_LIBRARIES)
-  list(APPEND AOCL_LIBRARIES lm pthread)
+  # Link against the standard math and pthread libraries as well as librt
+  list(APPEND AOCL_LIBRARIES m pthread rt)
 endif()
 
 include(FindPackageHandleStandardArgs)
