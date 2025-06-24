@@ -9,8 +9,7 @@ if(EIGEN_STANDARD_LIBRARIES_TO_LINK_TO)
   target_link_libraries(benchmark_aocl ${EIGEN_STANDARD_LIBRARIES_TO_LINK_TO})
 endif()
 
+
 if(AOCL_LIBRARIES)
   target_link_libraries(benchmark_aocl ${AOCL_LIBRARIES})
 endif()
-
-
