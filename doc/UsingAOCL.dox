@@ -52,6 +52,18 @@ To enable AOCL optimisations you must:
    environment variable to the AOCL installation directory.
  - Link your application with \c -lamdlibm -lblis -lflame -lm.
 
+   A convenient environment variable can be defined as:
+   \code
+   export LDFLAGS="-L${AOCL_ROOT}/lib -lamdlibm -lblis -lflame -lm -lpthread -lrt -pthread"
+   \endcode
+
+   Then compile the benchmark manually with:
+   \code
+   clang++ -O3 -DEIGEN_USE_AOCL_ALL -I${EIGEN_ROOT} -I${AOCL_ROOT}/include \
+           bench/benchmark_aocl.cpp ${LDFLAGS} -o eigen_aocl_example
+   \endcode
+
+
 When \c EIGEN_USE_AOCL_ALL is defined, Eigen automatically defines the
 following macros:
  - \c EIGEN_USE_AOCL_VML  (for vector math dispatch)
@@ -75,6 +87,14 @@ The top-level \c CMakeLists.txt also exposes the option
 \c bench/benchmark_aocl.cpp which exercises vector math and matrix
 operations.
 
+
+When configured with
+\code
+cmake .. -DEIGEN_BUILD_AOCL_BENCH=ON -DAOCL_ROOT=/path/to/aocl -DEIGEN_USE_AOCL_ALL=ON
+make benchmark_aocl
+\endcode
+the necessary LDFLAGS are applied automatically.
+
 \section TopicUsingAOCL_Dispatch Dispatch layer
 
 The header \c Eigen/src/Core/Assign_AOCL.h implements specialisations of
@@ -88,11 +108,24 @@ implementation.
 \section TopicUsingAOCL_Notes Notes
  - AOCL is optional. If the libraries are not found or the macro is not
    defined, Eigen will use its standard code paths.
- - For further acceleration of scalar math routines, AOCL ships
+
+- For further acceleration of scalar math routines, AOCL ships
    \c libalmfast which can be preloaded via
    \code
    LD_PRELOAD=/path/to/libalmfast.so my_app
    \endcode
+
+\section TopicUsingAOCL_Script Quick build script
+An example helper script \c scripts/build_aocl_example.sh is provided to
+automate cloning this repository, configuring CMake with AOCL support and
+building the benchmark and documentation. Assuming \c AOCL_ROOT points to an
+installed AOCL package, run
+\code{.sh}
+./scripts/build_aocl_example.sh
+\endcode
+The script builds the benchmark with clang, installs the headers to
+\c build/install and executes \c benchmark_aocl at the end.
+
 */
 
 }
