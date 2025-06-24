@@ -57,10 +57,15 @@ To enable AOCL optimisations you must:
    export LDFLAGS="-L${AOCL_ROOT}/lib -lamdlibm -lblis -lflame -lm -lpthread -lrt -pthread"
    \endcode
 
-   Then compile the benchmark manually with:
-   \code
-   clang++ -O3 -DEIGEN_USE_AOCL_ALL -I${EIGEN_ROOT} -I${AOCL_ROOT}/include \
-           bench/benchmark_aocl.cpp ${LDFLAGS} -o eigen_aocl_example
+  Then compile the benchmark manually with:
+  \code
+  clang++ -O3 -DEIGEN_USE_AOCL_ALL -I${EIGEN_ROOT} -I${AOCL_ROOT}/include \
+          bench/benchmark_aocl.cpp ${LDFLAGS} -o eigen_aocl_example
+  \endcode
+   The file \c bench/Makefile.aocl replicates this command so you can build
+   the example simply with:
+   \code{.sh}
+   make -f bench/Makefile.aocl
    \endcode
 
 
