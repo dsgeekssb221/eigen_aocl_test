@@ -51,6 +51,16 @@ To enable AOCL optimisations you must:
    system. Typically this is achieved by setting the \c AOCL_ROOT
    environment variable to the AOCL installation directory.
  - Link your application with \c -lamdlibm -lblis -lflame -lm.
+   A convenient environment variable can be defined as:
+   \code
+   export LDFLAGS="-L${AOCL_ROOT}/lib -lamdlibm -lblis -lflame -lm -lpthread -lrt -pthread"
+   \endcode
+
+   Then compile the benchmark manually with:
+   \code
+   clang++ -O3 -DEIGEN_USE_AOCL_ALL -I${EIGEN_ROOT} -I${AOCL_ROOT}/include \
+           bench/benchmark_aocl.cpp ${LDFLAGS} -o eigen_aocl_example
+   \endcode
 
 When \c EIGEN_USE_AOCL_ALL is defined, Eigen automatically defines the
 following macros:
@@ -74,6 +84,13 @@ The top-level \c CMakeLists.txt also exposes the option
 \c EIGEN_BUILD_AOCL_BENCH to build a benchmark located in
 \c bench/benchmark_aocl.cpp which exercises vector math and matrix
 operations.
+
+When configured with
+\code
+cmake .. -DEIGEN_BUILD_AOCL_BENCH=ON -DAOCL_ROOT=/path/to/aocl -DEIGEN_USE_AOCL_ALL=ON
+make benchmark_aocl
+\endcode
+the necessary LDFLAGS are applied automatically.
 
 \section TopicUsingAOCL_Dispatch Dispatch layer
 
