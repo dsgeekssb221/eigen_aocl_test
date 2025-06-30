@@ -29,92 +29,92 @@ void benchmarkVectorMath(int size) {
     cout << "\n--- Vector Math Benchmark (size = " << size << ") ---" << endl;
 
     auto start = high_resolution_clock::now();
-    result = v.array().exp();
+    result = v.array().exp().eval();
     auto end = high_resolution_clock::now();
     elapsed_ms = duration_cast<milliseconds>(end - start).count();
     cout << "exp() time: " << elapsed_ms << " ms" << endl;
 
     start = high_resolution_clock::now();
-    result = v.array().sin();
+    result = v.array().sin().eval();
     end = high_resolution_clock::now();
     elapsed_ms = duration_cast<milliseconds>(end - start).count();
     cout << "sin() time: " << elapsed_ms << " ms" << endl;
 
     start = high_resolution_clock::now();
-    result = v.array().cos();
+    result = v.array().cos().eval();
     end = high_resolution_clock::now();
     elapsed_ms = duration_cast<milliseconds>(end - start).count();
     cout << "cos() time: " << elapsed_ms << " ms" << endl;
 
     start = high_resolution_clock::now();
-    result = v.array().sqrt();
+    result = v.array().sqrt().eval();
     end = high_resolution_clock::now();
     elapsed_ms = duration_cast<milliseconds>(end - start).count();
     cout << "sqrt() time: " << elapsed_ms << " ms" << endl;
 
     start = high_resolution_clock::now();
-    result = v.array().log();
+    result = v.array().log().eval();
     end = high_resolution_clock::now();
     elapsed_ms = duration_cast<milliseconds>(end - start).count();
     cout << "log() time: " << elapsed_ms << " ms" << endl;
 
     start = high_resolution_clock::now();
-    result = v.array().log10();
+    result = v.array().log10().eval();
     end = high_resolution_clock::now();
     elapsed_ms = duration_cast<milliseconds>(end - start).count();
     cout << "log10() time: " << elapsed_ms << " ms" << endl;
 
     start = high_resolution_clock::now();
-    result = v.array().asin();
+    result = v.array().asin().eval();
     end = high_resolution_clock::now();
     elapsed_ms = duration_cast<milliseconds>(end - start).count();
     cout << "asin() time: " << elapsed_ms << " ms" << endl;
 
     start = high_resolution_clock::now();
-    result = v.array().sinh();
+    result = v.array().sinh().eval();
     end = high_resolution_clock::now();
     elapsed_ms = duration_cast<milliseconds>(end - start).count();
     cout << "sinh() time: " << elapsed_ms << " ms" << endl;
 
     start = high_resolution_clock::now();
-    result = v.array().acos();
+    result = v.array().acos().eval();
     end = high_resolution_clock::now();
     elapsed_ms = duration_cast<milliseconds>(end - start).count();
     cout << "acos() time: " << elapsed_ms << " ms" << endl;
 
     start = high_resolution_clock::now();
-    result = v.array().cosh();
+    result = v.array().cosh().eval();
     end = high_resolution_clock::now();
     elapsed_ms = duration_cast<milliseconds>(end - start).count();
     cout << "cosh() time: " << elapsed_ms << " ms" << endl;
 
     start = high_resolution_clock::now();
-    result = v.array().tan();
+    result = v.array().tan().eval();
     end = high_resolution_clock::now();
     elapsed_ms = duration_cast<milliseconds>(end - start).count();
     cout << "tan() time: " << elapsed_ms << " ms" << endl;
 
     start = high_resolution_clock::now();
-    result = v.array().atan();
+    result = v.array().atan().eval();
     end = high_resolution_clock::now();
     elapsed_ms = duration_cast<milliseconds>(end - start).count();
     cout << "atan() time: " << elapsed_ms << " ms" << endl;
 
     start = high_resolution_clock::now();
-    result = v.array().tanh();
+    result = v.array().tanh().eval();
     end = high_resolution_clock::now();
     elapsed_ms = duration_cast<milliseconds>(end - start).count();
     cout << "tanh() time: " << elapsed_ms << " ms" << endl;
 
     VectorXd v2 = VectorXd::Random(size);
     start = high_resolution_clock::now();
-    result = v.array() + v2.array();
+    result = (v.array() + v2.array()).eval();
     end = high_resolution_clock::now();
     elapsed_ms = duration_cast<milliseconds>(end - start).count();
     cout << "add() time: " << elapsed_ms << " ms" << endl;
 
     start = high_resolution_clock::now();
-    result = v.array().pow(2.0);
+    result = v.array().pow(2.0).eval();
     end = high_resolution_clock::now();
     elapsed_ms = duration_cast<milliseconds>(end - start).count();
     cout << "pow() time: " << elapsed_ms << " ms" << endl;

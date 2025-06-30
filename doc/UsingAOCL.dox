@@ -57,18 +57,24 @@ To enable AOCL optimisations you must:
    export LDFLAGS="-L${AOCL_ROOT}/lib -lamdlibm -lblis -lflame -lm -lpthread -lrt -pthread"
    \endcode
 
-  Then compile the benchmark manually with:
-  \code
-  clang++ -O3 -DEIGEN_USE_AOCL_ALL -I${EIGEN_ROOT} -I${AOCL_ROOT}/include \
+\subsection TopicUsingAOCL_BuildExamples Build command examples
+Typical ways to build Eigen with AOCL include:
+ - **Manual compilation** using \c clang++
+   \code
+   clang++ -O3 -DEIGEN_USE_AOCL_ALL -I${EIGEN_ROOT} -I${AOCL_ROOT}/include \
           bench/benchmark_aocl.cpp ${LDFLAGS} -o eigen_aocl_example
-  \endcode
-   The file \c bench/Makefile.aocl replicates this command so you can build
-   the example simply with:
+   \endcode
+ - **Using the provided Makefile**
    \code{.sh}
    make -f bench/Makefile.aocl
    \endcode
+ - **Via CMake** (configure and build in a separate directory)
+   \code
+   cmake .. -DEIGEN_USE_AOCL_ALL=ON -DAOCL_ROOT=/path/to/aocl
+   make
+   \endcode
 
-
+\subsection TopicUsingAOCL_Integration Integration details
 When \c EIGEN_USE_AOCL_ALL is defined, Eigen automatically defines the
 following macros:
  - \c EIGEN_USE_AOCL_VML  (for vector math dispatch)
@@ -100,6 +106,14 @@ make benchmark_aocl
 \endcode
 the necessary LDFLAGS are applied automatically.
 
+\section TopicUsingAOCL_Benchmark Benchmark and components
+The optional benchmark \c bench/benchmark_aocl.cpp exercises AOCL's vector
+math, BLAS (via \c libblis) and LAPACK (via \c libflame) implementations.
+It is built when the CMake option \c EIGEN_BUILD_AOCL_BENCH is enabled or via
+the provided \c bench/Makefile.aocl. The resulting executable links against
+\c libamdlibm, \c libblis and \c libflame in addition to the standard math
+library.
+
 \section TopicUsingAOCL_Dispatch Dispatch layer
 
 The header \c Eigen/src/Core/Assign_AOCL.h implements specialisations of
@@ -109,6 +123,34 @@ routines like \c amd_vrda_exp when the expression size exceeds
 \c EIGEN_AOCL_VML_THRESHOLD (128 by default). Operations on smaller
 vectors or unsupported scalar types fall back to Eigen's built-in
 implementation.
+
+\subsection TopicUsingAOCL_VMLFunctions AOCL vector math functions
+When AOCL is enabled, Eigen dispatches various coefficient-wise math
+operations to AMD's optimized vector routines. The following table
+summarises the main mappings:
+
+<table class="manual">
+<tr><th>Eigen expression</th><th>AOCL routine</th></tr>
+<tr><td>\c v.array().exp()</td><td>\c amd_vrda_exp</td></tr>
+<tr class="alt"><td>\c v.array().sin()</td><td>\c amd_vrda_sin</td></tr>
+<tr><td>\c v.array().cos()</td><td>\c amd_vrda_cos</td></tr>
+<tr class="alt"><td>\c v.array().sqrt()</td><td>\c amd_vrda_sqrt</td></tr>
+<tr><td>\c v.array().log()</td><td>\c amd_vrda_log</td></tr>
+<tr class="alt"><td>\c v.array().log10()</td><td>\c amd_vrda_log10</td></tr>
+<tr><td>\c v.array().asin()</td><td>\c amd_vrda_asin</td></tr>
+<tr class="alt"><td>\c v.array().sinh()</td><td>\c amd_vrda_sinh</td></tr>
+<tr><td>\c v.array().acos()</td><td>\c amd_vrda_acos</td></tr>
+<tr class="alt"><td>\c v.array().cosh()</td><td>\c amd_vrda_cosh</td></tr>
+<tr><td>\c v.array().tan()</td><td>\c amd_vrda_tan</td></tr>
+<tr class="alt"><td>\c v.array().atan()</td><td>\c amd_vrda_atan</td></tr>
+<tr><td>\c v.array().tanh()</td><td>\c amd_vrda_tanh</td></tr>
+<tr class="alt"><td>\c v.array().log2()</td><td>\c amd_vrda_log2</td></tr>
+<tr><td>\c (a.array() + b.array())</td><td>\c amd_vrda_add</td></tr>
+<tr class="alt"><td>\c pow(a.array(), b)</td><td>\c amd_vrda_pow</td></tr>
+</table>
+
+Operations not provided by AOCL automatically revert to Eigen's own
+implementations.
 
 \section TopicUsingAOCL_Notes Notes
  - AOCL is optional. If the libraries are not found or the macro is not
