@@ -7,7 +7,8 @@ AOCL_ROOT ?= /opt/aocl
 
 CXX ?= clang++
 CXXFLAGS ?= -O3 -g -DEIGEN_USE_AOCL_ALL \
-	        -I$(EIGEN_INSTALL)/include -I$(AOCL_ROOT)/include -Wno-parentheses
+                -I$(EIGEN_INSTALL)/include -I$(AOCL_ROOT)/include -Wno-parentheses \
+                -Wno-deprecated-copy
 LDFLAGS ?= -L$(AOCL_ROOT)/lib -lamdlibm -lblis -lflame -lm -lpthread -lrt -pthread
 
 TARGET = build/eigen_aocl_example
